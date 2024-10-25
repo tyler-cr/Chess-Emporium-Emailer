@@ -7,7 +7,7 @@
 </head>
 <body>
     <label for="options">Select an email type:</label>
-    <select id="options" onchange="handleSelection()">
+    <select id="options">
         <option value="" disabled selected>Select an option</option>
         <option value="Liaison Shift">Liaison Shift</option>
         <option value="Camp Shift">Camp Shift</option>
@@ -16,35 +16,10 @@
         <option value="SEP Sub">SEP Sub</option>
         <option value="SEP Takeover">SEP Takeover</option>
     </select>
+    <button onclick="handleSelection()">Submit</button>
 
     <div id="output"></div>
-
-    <script>
-        function handleSelection() {
-            const selectedText = document.getElementById("options").value;
-            switch (selectedText) {
-                case "Liaison Shift":
-                    document.getElementById("output").innerText = "You selected Option 1.";
-                    break;
-                case "Camp Shift":
-                    document.getElementById("output").innerText = "You selected Option 2.";
-                    break;
-                case "PCC Coach":
-                    document.getElementById("output").innerText = "You selected Option 3.";
-                    break;
-                case "Assessment Coach":
-                    document.getElementById("output").innerText = "You selected Option 4.";
-                    break;
-                case "SEP Sub":
-                    document.getElementById("output").innerText = "You selected Option 5.";
-                    break;
-                case "SEP Takeover":
-                    document.getElementById("output").innerText = "You selected Option 6.";
-                    break;
-                default:
-                    document.getElementById("output").innerText = "";
-            }
-        }
-    </script>
 </body>
+<script src="script.js"></script>
+<script src="classes.js"></script>
 </html>
