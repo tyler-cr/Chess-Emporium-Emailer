@@ -1,4 +1,4 @@
-class Emailer {
+ class Emailer {
     sender = "";
     receiver = "";
     day  = "";
@@ -12,7 +12,7 @@ class Emailer {
     }
 }
 
-class Center extends Emailer{
+ class Center extends Emailer{
     sheaOrTempe = "shea";
 
     constructor(sender, receiver, day, date, sheaOrTempe){
@@ -21,7 +21,7 @@ class Center extends Emailer{
     }
 }
 
-class Liaison extends Center {
+ class Liaison extends Center {
     startTime = "";
     endTime = "";
     constructor(sender, receiver, day, date, sheaOrTempe, startTime, endTime) {
@@ -47,7 +47,7 @@ to be the substitute liaison at the " + this.sheaOrTempe + " location on " + thi
     }
 }
 
-class Camp extends Center{ 
+ class Camp extends Center{ 
 
     morningOrEvening = "morning";
     primSecTer = PST.primary;
@@ -76,7 +76,7 @@ class Camp extends Center{
     }
 }
 
-class PremiumCenterClass extends Center{
+ class PremiumCenterClass extends Center{
     level = PCC.pawn;
     startTime = "";
 
@@ -106,7 +106,7 @@ to be the substitute coach for the "+this.level+" class at" + this.sheaOrTempe +
     }
 }
 
-class Assessment extends Center{
+ class Assessment extends Center{
     student = "";
     rating = "";
     priorExp = "";
@@ -143,7 +143,7 @@ to be the assessor for an assessment at" + this.sheaOrTempe + " location on " + 
 
 }
 
-class SEP extends Emailer{
+ class SEP extends Emailer{
     schoolName = "";
     schoolAddress = "";
     primaryOrAssist = "Primary";
@@ -162,7 +162,7 @@ class SEP extends Emailer{
     }
 }
 
-class SEPTakeover extends SEP{
+ class SEPTakeover extends SEP{
     constructor(sender, receiver, day, date, schoolName, schoolAddress, primaryOrAssist, start, finish, getThere){
         super(sender, receiver, day, date, schoolName, schoolAddress, primaryOrAssist, start, finish, getThere);
     }
@@ -184,7 +184,7 @@ class SEPTakeover extends SEP{
     }
 }
 
-class SEPSub extends SEP{
+ class SEPSub extends SEP{
     constructor(sender, receiver, day, date, schoolName, schoolAddress, primaryOrAssist, start, finish, getThere){
         super(sender, receiver, day, date, schoolName, schoolAddress, primaryOrAssist, start, finish, getThere);
     }
@@ -207,23 +207,16 @@ class SEPSub extends SEP{
 }
 
 
-const PST = {
+ const PST = {
     PRIMARY:    "Primary",
     SECONDARY:  "Secondary",
     TERTIARY:   "Tertiary"
 }
 
-const PCC = {
+ const PCC = {
     PAWN:       "Pawn",
     KNIGHT:     "Knight",
     BISHOP:     "Bishop",
     ROOK:       "Rook",
     QUEEN:      "Queen"
 }
-
-function main(){
-    let testEmail = new SEPSub("sender", "receiver", "day", "date", "schoolName", "schoolAddress", "primaryOrAssist", "start", "finish", "getThere");
-    console.log(testEmail.to_String());
-}
-
-main();
