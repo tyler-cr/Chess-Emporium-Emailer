@@ -193,10 +193,16 @@ function handleInput(title, inputBoxes) {
 }
 
 function addActionButtons() {
+    // Check if the buttons already exist
+    if (document.getElementById("copyButton") || document.getElementById("resetButton")) {
+        return; // Exit if buttons already exist
+    }
+
     const container = document.createElement("div");
 
     // Create "Copy to Clipboard" button
     const copyButton = document.createElement("button");
+    copyButton.id = "copyButton";
     copyButton.innerText = "Copy to Clipboard";
     container.appendChild(copyButton);
 
@@ -214,6 +220,7 @@ function addActionButtons() {
 
     // Create "Reset" button
     const resetButton = document.createElement("button");
+    resetButton.id = "resetButton";
     resetButton.innerText = "Reset";
     container.appendChild(resetButton);
 
@@ -226,6 +233,7 @@ function addActionButtons() {
     // Append the action buttons to the output
     document.getElementById("output").appendChild(container);
 }
+
 
 let generateHelper = {
     "Liaison Shift": ["sender", "receiver", "day", "date", "sheaOrTempe", "startTime", "endTime"],
