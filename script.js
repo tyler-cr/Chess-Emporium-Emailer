@@ -31,39 +31,56 @@ function handleSelection() {
     }
 }
 
+const dropdownOptions = {
+    sheaOrTempe: ["Shea", "Tempe"],
+    morningOrEvening: ["Morning", "Evening"],
+    primaryOrAssist: ["Primary", "Assistant"],
+    level: ["Pawn", "Knight", "Bishop", "Rook", "Queen"]
+};
+
 function generateInput(title) {
     const container = document.createElement("div");
     const heading = document.createElement("h3");
     heading.innerText = title;
     container.appendChild(heading);
 
-    // Create an array to hold references to input boxes
     let inputBoxes = [];
 
-    for (let i = 0; i < generateHelper[title].length; i++) {
-        const inputBox = document.createElement("input");
-        inputBox.type = "text";
-        inputBox.placeholder = generateHelper[title][i];
-        container.appendChild(inputBox);
+    generateHelper[title].forEach(field => {
+        let element;
+
+        if (dropdownOptions[field]) {
+            // Create a dropdown if options are defined for the field
+            element = document.createElement("select");
+            dropdownOptions[field].forEach(optionValue => {
+                const option = document.createElement("option");
+                option.value = optionValue;
+                option.innerText = optionValue;
+                element.appendChild(option);
+            });
+        } else {
+            // Default to a text input if no options are defined
+            element = document.createElement("input");
+            element.type = "text";
+            element.placeholder = field;
+        }
+
+        container.appendChild(element);
         container.appendChild(document.createElement("br")); // Line break for layout
+        inputBoxes.push(element);
+    });
 
-        // Store references to each input box
-        inputBoxes.push(inputBox);
-    }
-
-    // Add a button at the end
     const button = document.createElement("button");
     button.innerText = "Submit";
     container.appendChild(button);
 
-    // Append the container to the output
     document.getElementById("output").appendChild(container);
 
-    // Add event listener to the button
     button.addEventListener("click", function() {
-        handleInput(title, inputBoxes); // Pass title and inputBoxes to handleInput
+        handleInput(title, inputBoxes);
     });
 }
+
 
 function handleInput(title, inputBoxes) {
     let emailer;
@@ -134,7 +151,8 @@ function handleInput(title, inputBoxes) {
                 inputs[6], // primaryOrAssist
                 inputs[7], // start
                 inputs[8], // finish
-                inputs[9]  // getThere
+                inputs[9], // getThere
+                inputs[10],// lessonWeek
             );
             email = emailer.to_String();
             break;
@@ -214,7 +232,7 @@ let generateHelper = {
     "Camp Shift": ["sender", "receiver", "day", "date", "sheaOrTempe", "morningOrEvening", "primSecTer"],
     "PCC Coach": ["sender", "receiver", "day", "date", "sheaOrTempe", "level", "startTime"],
     "Assessment Coach": ["sender", "receiver", "day", "date", "sheaOrTempe", "student", "rating", "priorExp", "startTime"],
-    "SEP Sub": ["sender", "receiver", "day", "date", "schoolName", "schoolAddress", "primaryOrAssist", "start", "finish", "getThere"],
+    "SEP Sub": ["sender", "receiver", "day", "date", "schoolName", "schoolAddress", "primaryOrAssist", "start", "finish", "getThere", "lessonWeek"],
     "SEP Takeover": ["sender", "receiver", "day", "date", "schoolName", "schoolAddress", "primaryOrAssist", "start", "finish", "getThere"]
 };
 
@@ -401,7 +419,7 @@ to be the assessor for an assessment at the " + this.sheaOrTempe + " location on
     to_String(){
         let email = "";
         email += "Hello " + this.receiver + ",\n\n" +
-        "This email is to confirm you are good to take over as the coach at " + this.schoolName + " starting on " + this.date + " from " + this.start + " to " + this.finish + " (arrive by " + this.getThere + ").\n\n" +
+        "This email is to confirm you are good to take over as the "+this.primaryOrAssist+" coach at " + this.schoolName + " starting on " + this.date + " from " + this.start + " to " + this.finish + " (arrive by " + this.getThere + ").\n\n" +
         "Here's the school info:\n" +
         "Name: " + this.schoolName + "\n" +
         "Address: " + this.schoolAddress + "\n" +
@@ -415,19 +433,22 @@ to be the assessor for an assessment at the " + this.sheaOrTempe + " location on
 }
 
  class SEPSub extends SEP{
-    constructor(sender, receiver, day, date, schoolName, schoolAddress, primaryOrAssist, start, finish, getThere){
+    constructor(sender, receiver, day, date, schoolName, schoolAddress, primaryOrAssist, start, finish, getThere, lessonWeek){
         super(sender, receiver, day, date, schoolName, schoolAddress, primaryOrAssist, start, finish, getThere);
+        this.lessonWeek = lessonWeek;
+        this.lesson = LESSONWEEK[this.lessonWeek];
     }
 
     to_String() {
         let email = "";
         email += "Hello " + this.receiver + ",\n\n";
-        email += "This email is to confirm you are good to substitute at " + this.schoolName + " on " + this.date + " from " + this.start + " to " + this.finish + " (arrive by " + this.getThere + ").\n\n";
+        email += "This email is to confirm you are good to substitute as the "+this.primaryOrAssist+" coach at " + this.schoolName + " on " + this.date + " from " + this.start + " to " + this.finish + " (arrive by " + this.getThere + ").\n\n";
         email += "Here's the school info:\n";
         email += "Name: " + this.schoolName + "\n";
         email += "Address: " + this.schoolAddress + "\n";
-        email += "Date and Time of Assignment: " + this.date + ", " + this.start + " - " + this.finish + " (arrive by " + this.getThere + ").\n\n";
-        email += "Attached is a roster for reference.\n\n";
+        email += "Date and Time of Assignment: " + this.date + ", " + this.start + " - " + this.finish + " (arrive by " + this.getThere + ").\n";
+        email += "Class #"+this.lessonWeek+": "+this.lesson+"\n\n";
+        email += "Attached is a roster for reference. As well, you should be able to acces it on the 'My Rosters' section of Chess Emporium website.\n\n";
         email += "Please email back and confirm that this assignment works for you.\n\n";
         email += "Sincerely,\nTyler Crimando, Chess Emporium Liaison";
     
@@ -437,7 +458,7 @@ to be the assessor for an assessment at the " + this.sheaOrTempe + " location on
 }
 
 function addOneHour(time) {
-    let [hours, minutes] = time.split(":");
+    let [hours, minutes] = time.split(":").map(part => part.trim());
     let period = minutes.slice(-2);
     minutes = minutes.slice(0, -2).trim();
 
@@ -454,6 +475,7 @@ function addOneHour(time) {
 }
 
 
+
  const PST = {
     PRIMARY:    "Primary",
     SECONDARY:  "Secondary",
@@ -467,3 +489,23 @@ function addOneHour(time) {
     ROOK:       "Rook",
     QUEEN:      "Queen"
 }
+
+ const LESSONWEEK = {
+    "1":        "Piece Movement, Name, and Value",
+    "2":        "Check, Checkmate, and Touch Move",
+    "3":        "Pawn Promotion and Notation",
+    "4":        "General Opening Theory",
+    "5":        "Queen, Rook and King Mate",
+    "6":        "Active Moves",
+    "7":        "Pins",
+    "8":        "Forks",
+    "9":        "Discovery",
+    "10":       "King and Queen Mate",
+    "11":       "Trade",
+    "12":       "Threat",
+    "13":       "Remove the Defender",
+    "14":       "Back-Rank Mate",
+    "15":       "Decoy",
+    "16":       "Overload",
+
+ }
