@@ -458,7 +458,7 @@ to be the assessor for an assessment at the " + this.sheaOrTempe + " location on
         email += "Class #"+this.lessonWeek+": "+this.lesson+"\n\n";
         email += "Attached is a roster for reference. As well, you should be able to acces it on the 'My Rosters' section of Chess Emporium website.\n\n";
         email += "Please email back and confirm that this assignment works for you.\n\n";
-        email += "Sincerely,\nTyler Crimando, Chess Emporium Liaison";
+        email += "Sincerely,\n"+this.sender+", Chess Emporium Liaison";
     
         return email;
     }
